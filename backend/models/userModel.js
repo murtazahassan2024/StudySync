@@ -1,6 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import mongoose from 'mongoose';
-// defining a structure of user collection
+
 const userSchema = mongoose.Schema(
     {
         name: {
@@ -23,27 +23,21 @@ const userSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        
-        
-        
     },
     {
         timestamps: true,
     }
 );
 
-//attaching a matchPassword method to the user schema to match passwords
-//returns a boolean
+//attaching a matchPassword method to the user schema to match passwords, which returns a boolean
 //this method is called from userRoutes LOGIN API
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
     const isMatch = await bcryptjs.compare(enteredPassword, this.password);
-    console.log({ isMatch, thisPassword: this.password, enteredPassword });
     return isMatch;
 };
 
-//For Hashing a passowrd before it is saved to the DB
-//returns a HASH
+//For Hashing a passowrd before it is saved to the DB, that returns a HASH.
 //this method is called from userRoutes SIGNUP API
 
 userSchema.pre('save', async function (next) {

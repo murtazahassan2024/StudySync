@@ -5,21 +5,15 @@ import User from '../models/userModel.js';
 // it verifies the login token proviided by the JWT
 const protect = asyncHandler(async (req, res, next) => {
     let token;
-    console.log({ token });
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        console.log('tokennn');
-        console.log(req.headers.authorization);
-        ///Beare djdjffjfjfjfjfjfjfj
-        //["Bearer", "sjjdjdjdjjfjdjdj"]
         try {
             token = req.headers.authorization.split(' ')[1];
 
             //we verify the coming token with JWT Secret key
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            console.log({ decoded });
+        
             //appending the request object with USER
             const user = await User.findById(decoded.id).select('-password');
-            console.log(user);
             req.user = user;
             next();
         } catch (error) {
@@ -39,10 +33,7 @@ const admin = asyncHandler(async (req, res, next) => {
     let token;
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        console.log('tokennn');
-        console.log(req.headers.authorization);
-        ///Beare djdjffjfjfjfjfjfjfj
-        //["Bearer", "sjjdjdjdjjfjdjdj"]
+
         try {
             token = req.headers.authorization.split(' ')[1];
 
