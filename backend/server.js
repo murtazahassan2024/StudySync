@@ -57,5 +57,5 @@ app.use('/api/password', passwordRoutes);
 app.use(notFound);
 // so errorHandler give a nice formatting to the erorr
 app.use(errorHandler);
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8001;
 app.listen(PORT, () => console.log(`Server is listening on PORT ${PORT}`));
