@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Button from '@mui/material/Button';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,10 +13,13 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:8001/api/users/login', {
-                email,
-                password,
-            });
+            const response = await axios.post(
+                'http://localhost:8001/api/users/login',
+                {
+                    email,
+                    password,
+                },
+            );
 
             localStorage.setItem('userToken', response.data.token);
             navigate('/'); // Redirect to the main page after successful login
@@ -50,11 +54,26 @@ const Login = () => {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    <div className="d-grid gap-2 mt-3">
-                        <button type="submit" className="btn btn-primary">
-                            Submit
-                        </button>
+                    <div id="block_container">
+                        <div
+                            className="d-flex justify-content-between mt-3"
+                            id="bloc1">
+                            <div id="block1">
+                                <p>
+                                    New User? <a href="/register">Register</a>
+                                </p>
+                            </div>
+
+                            <div className="d-grid gap-2" id="block2">
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
                     </div>
+
                     {error && <p className="text-danger">{error}</p>}
                 </div>
             </form>

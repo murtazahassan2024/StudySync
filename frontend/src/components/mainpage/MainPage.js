@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 const MainPage = () => {
     return (
     <div>
-        <h1>Main Page</h1>
-        <p>This is the main page.</p>
-        <Link to="/login">Login</Link>
+        <h1 style={{ textAlign: 'center' }}>StudySync</h1>
     </div>
     );
 };

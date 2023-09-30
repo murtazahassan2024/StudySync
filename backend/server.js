@@ -4,6 +4,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/dbConnection.js';
+import studyGroupRoutes from './routes/studyGroupRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import passwordRoutes from './routes/passwordRoutes.js';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
@@ -51,8 +52,8 @@ app.use('/api/password', passwordRoutes);
 
 
 // ======================>CheckPoint 3<=====================
+app.use('/api/studygroup', studyGroupRoutes)
 
-// app.use("/api/produst", productRoutes);
 //this app is an EXpress APP ,
 app.use(notFound);
 // so errorHandler give a nice formatting to the erorr
