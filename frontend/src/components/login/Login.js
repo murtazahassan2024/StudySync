@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
+import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +16,6 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
         try {
             const response = await axios.post(
                 'http://localhost:8001/api/users/login',
@@ -20,69 +24,93 @@ const Login = () => {
                     password,
                 },
             );
-
             localStorage.setItem('userToken', response.data.token);
-            navigate('/'); // Redirect to the main page after successful login
+            navigate('/');
         } catch (error) {
             console.error('Error during login:', error);
-            setError('Wrong email or password'); // Set an error message
+            setError('Wrong email or password');
         }
     };
 
     return (
-        <div className="Auth-form-container">
-            <form className="Auth-form" onSubmit={handleLogin}>
-                <div className="Auth-form-content">
-                    <h3 className="Auth-form-title">Sign In</h3>
-                    <div className="form-group mt-3">
-                        <label>Email address</label>
-                        <input
-                            type="email"
+        <Grid container component="main" sx={{ height: '100vh' }}>
+            <Grid
+                item
+                xs={false}
+                sm={4}
+                md={7}
+                sx={{
+                    backgroundImage:
+                        'url(https://www.ketchum.edu/sites/default/files/2022-08/First%20%28Top%29%20Image%20.jpeg)',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                }}
+            />
+            <Grid item xs={12} sm={8} md={5} elevation={6} square>
+                <Box
+                    sx={{
+                        my: 8,
+                        mx: 4,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}>
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign In
+                    </Typography>
+                    <Box
+                        component="form"
+                        noValidate
+                        onSubmit={handleLogin}
+                        sx={{ mt: 1 }}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
                             id="email"
-                            className="form-control mt-1"
-                            placeholder="Enter email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                    </div>
-                    <div className="form-group mt-3">
-                        <label>Password</label>
-                        <input
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
                             type="password"
                             id="password"
-                            className="form-control mt-1"
-                            placeholder="Enter password"
+                            autoComplete="current-password"
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                    </div>
-                    <div id="block_container">
-                        <div
-                            className="d-flex justify-content-between mt-3"
-                            id="bloc1">
-                            <div id="block1">
-                                <p>
-                                    New User? <a href="/register">Register</a>
-                                </p>
-                            </div>
-
-                            <div className="d-grid gap-2" id="block2">
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary">
-                                    Submit
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                    Let's talk
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {error && <p className="text-danger">{error}</p>}
-                </div>
-            </form>
-        </div>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}>
+                            Sign In
+                        </Button>
+                        {error && (
+                            <Typography variant="body2" color="error">
+                                {error}
+                            </Typography>
+                        )}
+                        
+                        <Box mt={5}>
+                            <Typography variant="body2">
+                                New User? <a href="/register">Register</a>
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Box>
+            </Grid>
+        </Grid>
     );
 };
 

@@ -18,8 +18,13 @@
   }
 }
 
+.text-danger{
+  color: red;
+}
 
-
+#submitButton{
+  width: 100%;
+}
 
 
 .App-header {
@@ -88,11 +93,11 @@ label {
 }
 
 #email{
-  margin-left: 10px !important;
+  width: 300px;
 }
 
 #password{
-  margin-left: 39px;
+  
 }
 
 #block_container {

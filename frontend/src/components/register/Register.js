@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Typography, Grid, Box, Avatar, Container, Link } from '@mui/material';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -21,98 +22,102 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(
-                'http://localhost:8001/api/users/',
-                formData,
-            );
+            const response = await axios.post('http://localhost:8001/api/users/', formData);
             localStorage.setItem('userToken', response.data.token);
-            navigate('/login'); // Redirect to main page after successful registration
-        } catch (error) {
-            console.error('Error during registration:', error);
-            setError('Registration failed'); // Set an error message
+            navigate('/login');
+        } catch (err) {
+            console.error('Error during registration:', err);
+            setError('Registration failed');
         }
     };
 
     return (
-        <div className="Auth-form-container">
-            <form className="Auth-form" onSubmit={handleRegister}>
-                <div className="Auth-form-content">
-                    <h3 className="Auth-form-title">Sign Up</h3>
-
-                    <div className="form-group mt-3">
-                        <label>Name</label>
-                        <input
-                            type="text"
-                            name="name"
-                            style={{marginLeft: '47px'}}
-                            className="form-control mt-1"
-                            placeholder="Enter name"
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div className="form-group mt-3">
-                        <label>Email</label>
-                        <input
-                            type="email"
-                            style={{marginLeft: '50px'}}
-                            name="email"
-                            className="form-control mt-1"
-                            placeholder="Enter email"
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div className="form-group mt-3">
-                        <label>Password</label>
-                        <input
-                            type="password"
-                            style={{marginLeft: '21px'}}
-                            name="password"
-                            className="form-control mt-1"
-                            placeholder="Enter password"
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div className="form-group mt-3">
-                        <br />
-                        <label>Security Question</label>
-                        <br/>
-                        <label>What is your favourite book?</label>
-                        <input
-                            type="text"
-                            name="securityAnswer"
-                            style={{marginTop: '6px'}}
-                            className="form-control mt-1"
-                            placeholder="Your security answer"
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div id="block_container">
-                        <div
-                            className="d-flex justify-content-between mt-3"
-                            id="bloc1">
-                            <div id="block1">
-                                <p>
-                                    Already a user? <a href="/login">Login</a>
-                                </p>
-                            </div>
-                            <div className="d-grid gap-2" id="block2">
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary">
-                                    Register
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {error && <p className="text-danger">{error}</p>}
-                </div>
-            </form>
-        </div>
+        <Container component="main" maxWidth="xs">
+            <Box
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Sign Up
+                </Typography>
+                <Box component="form" noValidate onSubmit={handleRegister} sx={{ mt: 3 }}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id="name"
+                                label="Name"
+                                name="name"
+                                autoComplete="name"
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="new-password"
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                name="securityAnswer"
+                                label="Security Answer (What is your favourite book?)"
+                                type="text"
+                                id="securityAnswer"
+                                autoComplete="off"
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Sign Up
+                    </Button>
+                    <Grid container justifyContent="flex-end">
+                        <Grid item>
+                            <Link href="/login" variant="body2">
+                                Already have an account? Sign in
+                            </Link>
+                        </Grid>
+                    </Grid>
+                    {error && (
+                        <Typography variant="body2" color="error" align="center">
+                            {error}
+                        </Typography>
+                    )}
+                </Box>
+            </Box>
+        </Container>
     );
 };
 
