@@ -3,17 +3,23 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const CreateStudyGroupForm = () => {
+    const studyGroupData = {
+        members: ['613f24b59d4237124e0b7890', '614a12c4a8923412e4c67a89'],
+    };
+
     const [groupName, setGroupName] = useState('');
     const [location, setLocation] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
-    const [members, setMembers] = useState([]);
+    const [members, setMembers] = useState(studyGroupData.members);
     const [studyTopics, setStudyTopics] = useState('');
     const [message, setMessage] = useState(null);
     const [isError, setIsError] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -42,8 +48,9 @@ const CreateStudyGroupForm = () => {
 
             setMessage('Study group successfully created!');
             setIsError(false);
-
             // Optionally navigate or do further actions if needed.
+
+            navigate('/');
         } catch (error) {
             console.error('Error creating study group:', error);
             setMessage('Error creating study group. Please try again.');
@@ -77,7 +84,6 @@ const CreateStudyGroupForm = () => {
                         onChange={(e) => setStudyTopics(e.target.value)}
                     />
                 </Grid>
-
                 <Grid item xs={12}>
                     <TextField
                         required
@@ -108,17 +114,7 @@ const CreateStudyGroupForm = () => {
                         onChange={(e) => setEndTime(e.target.value)}
                     />
                 </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        fullWidth
-                        label="Members (comma-separated emails)"
-                        variant="outlined"
-                        value={members.join(',')}
-                        onChange={(e) => setMembers(e.target.value.split(','))}
-                    />
-                </Grid>
-
-                {/* For members, you can use a multi-select component */}
+                ß{/* For members, you can use a multi-select component */}
                 {/* For study topics, you can use a text input or select component */}
                 {/* Remember to update the state and API request accordingly */}
                 <Grid item xs={12}>

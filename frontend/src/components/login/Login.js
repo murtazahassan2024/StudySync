@@ -40,11 +40,9 @@ const Login = () => {
                 sm={4}
                 md={7}
                 sx={{
-                    backgroundImage:
-                        'url(https://www.ketchum.edu/sites/default/files/2022-08/First%20%28Top%29%20Image%20.jpeg)',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
+                    backgroundImage: 'url(/IMG_9096.png)',
+                    backgroundSize: '72%',
+                    backgroundPosition: 'bottom 30% right 50%',
                 }}
             />
             <Grid item xs={12} sm={8} md={5} elevation={6} square>

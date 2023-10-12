@@ -5,7 +5,7 @@
     "type": "module",
     "main": "server.js",
     "scripts": {
-        "start":"concurrently --kill-others-on-fail \"npm run dev\" \"npm run client\"",
+        "start": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run client\"",
         "seed:admin": "node seeder/userSeeder",
         "dev": "nodemon server.js",
         "client": "cd ../frontend && npm start"

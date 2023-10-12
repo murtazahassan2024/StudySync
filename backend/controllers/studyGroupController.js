@@ -46,7 +46,7 @@ const updateStudyGroup = asyncHandler(async (req, res) => {
         studyGroup.location = location;
         studyGroup.startTime = startTime;
         studyGroup.endTime = endTime;
-        studyGroup.members = members;
+        studyGroup.members = ["613f24b59d4237124e0b7890", "614a12c4a8923412e4c67a89"];
         studyGroup.studyTopics = studyTopics;
 
         const updatedGroup = await studyGroup.save();
