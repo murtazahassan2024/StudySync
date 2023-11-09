@@ -4,8 +4,31 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '/Users/murtazahassan/Desktop/StudySync/frontend/src/context/AuthContext.js';
+import { getUserEmail } from '/Users/murtazahassan/Desktop/StudySync/frontend/src/components/login/Login.js'; 
+
+export const exportMembers = (updatedMembers) => {
+  // This function will handle the exporting of members
+  // For example, logging to the console:
+    console.log(updatedMembers)
+    return updatedMembers
+
+  // Or send this data to a server or write to a file as needed
+  // axios.post('/api/export/members', { members: updatedMembers });
+};
+
+
+
+// ... Inside your component ...
+
+// Update the exportMembers function to be called every time the members are updated.
+
+
+
 
 const CreateStudyGroupForm = () => {
+    const { email } = useAuth();
     const [groupName, setGroupName] = useState('');
     const [location, setLocation] = useState('');
     const [startTime, setStartTime] = useState('');
@@ -14,37 +37,64 @@ const CreateStudyGroupForm = () => {
     const [studyTopics, setStudyTopics] = useState('');
     const [message, setMessage] = useState(null);
     const [isError, setIsError] = useState(false);
+    const navigate = useNavigate();
+    
+    
+    const handleMemberChange = (updatedMembers) => {
+        setMembers(updatedMembers);  // Update the state with the new members
+        exportMembers(updatedMembers); // Call exportMembers with the updated members list
+};
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    
 
-        // Split the studyTopics string into an array
-        const studyTopicsArray = studyTopics
-            .split(',')
-            .map((topic) => topic.trim());
 
-        try {
-            const response = await axios.post(
-                'http://localhost:8001/api/studygroup/',
-                {
-                    groupName,
-                    location,
-                    startTime,
-                    endTime,
-                    members,
-                    studyTopics: studyTopicsArray,
-                },
-            );
 
-            if (response.data && response.data.token) {
-                localStorage.setItem('userToken', response.data.token);
-            }
 
-            setMessage('Study group successfully created!');
-            setIsError(false);
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Retrieve the email from local storage
+    console.log(getUserEmail())
+    console.log(getUserEmail())
+ 
+    const userEmail = getUserEmail();
+    let updatedMembers = members;
+    if (userEmail) {
+        // Add the email from getUserEmail to the list if it's not already there
+        updatedMembers =userEmail
+    }
+    
+    // Split the studyTopics string into an array
+    const studyTopicsArray = studyTopics
+        .split(',')
+        .map((topic) => topic.trim());
+    
+   
+    
 
-            // Optionally navigate or do further actions if needed.
-        } catch (error) {
+    try {
+        const response = await axios.post(
+            'http://localhost:8001/api/studygroup/',
+            {
+                groupName,
+                location,
+                startTime,
+                endTime,
+                members: updatedMembers,
+                studyTopics: studyTopicsArray,
+            },
+        );
+
+        if (response.data && response.data.token) {
+            localStorage.setItem('userToken', response.data.token);
+        }
+
+        setMessage('Study group successfully created!');
+        setIsError(false);
+        navigate('/chat-room');
+        
+
+    } catch (error) {
             console.error('Error creating study group:', error);
             setMessage('Error creating study group. Please try again.');
             setIsError(true);
@@ -109,26 +159,33 @@ const CreateStudyGroupForm = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField
-                        fullWidth
-                        label="Members (comma-separated emails)"
-                        variant="outlined"
-                        value={members.join(',')}
-                        onChange={(e) => setMembers(e.target.value.split(','))}
-                    />
-                </Grid>
+            <TextField
+                fullWidth
+                label="Members (comma-separated emails)"
+                variant="outlined"
+                value={members} // 'members' should now be a string, not an array
+                onChange={(e) => setMembers(e.target.value)}
+            />
+</Grid>
 
                 {/* For members, you can use a multi-select component */}
                 {/* For study topics, you can use a text input or select component */}
                 {/* Remember to update the state and API request accordingly */}
                 <Grid item xs={12}>
                     <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        fullWidth>
-                        Create Study Group
-                    </Button>
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                value={members.length > 0 ? members.join(',') : ''}
+                onClick={() => {
+                    const updatedMembers = [...members, email]; // Create the updated members list
+                    setMembers(updatedMembers);                // Update the members state
+                    handleMemberChange(members); 
+                }}            >
+                Create Study Group
+                
+            </Button>
                 </Grid>
             </Grid>
             <Grid item xs={12}>
@@ -141,5 +198,7 @@ const CreateStudyGroupForm = () => {
         </form>
     );
 };
+
+
 
 export default CreateStudyGroupForm;

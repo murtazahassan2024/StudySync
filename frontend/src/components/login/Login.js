@@ -7,30 +7,54 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '/Users/murtazahassan/Desktop/StudySync/frontend/src/context/AuthContext.js';
+
+export const getUserEmail = () => {
+    return localStorage.getItem('userEmail');
+
+};
 
 const Login = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const [userId, setUserId] = useState(null);
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post(
                 'http://localhost:8001/api/users/login',
-                {
-                    email,
-                    password,
-                },
+                { email, password },
             );
-            localStorage.setItem('userToken', response.data.token);
-            navigate('/');
-        } catch (error) {
-            console.error('Error during login:', error);
-            setError('Wrong email or password');
+
+            console.log('User details:', response.data);
+            localStorage.setItem('userEmail', response.data.email);
+            console.log('Email from storage:', getUserEmail());
+
+            // Assuming 'login' function is from AuthContext and it's set up to handle the response
+            login(response.data); // This function will set the user and email in the context
+
+
+
+        navigate('/'); // Redirect the user to the home page or dashboard
+    }  catch (error) {
+            console.error('Error during login:', error.response || error.message);
+            if (error.response && error.response.status === 401) {
+                setError('The email or password is incorrect.');
+            } else if (error.response) {
+                setError('An error occurred. Please try again later.');
+            } else if (error.request) {
+                setError('No response from server. Check your network connection.');
+            } else {
+                setError('Login failed. Please try again.');
+            }
         }
     };
+
+
 
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>

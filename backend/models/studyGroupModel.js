@@ -20,8 +20,7 @@ const studyGroupSchema = mongoose.Schema(
         },
         members: [
             {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Users',
+                type: String,
             },
         ],
         studyTopics: [
