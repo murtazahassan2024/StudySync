@@ -15,6 +15,10 @@ import { useNavigate } from 'react-router-dom';
 import { TextField } from '@mui/material';
 import { getUserEmail } from '/Users/murtazahassan/Desktop/StudySync/frontend/src/components/login/Login.js'; 
 import {exportMembers} from '/Users/murtazahassan/Desktop/StudySync/frontend/src/components/studygroupformation/CreateStudyGroup.js';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMessage } from '@fortawesome/free-regular-svg-icons';
+
+
 
 const MainPage = () => {
     const [studyGroups, setStudyGroups] = useState([]);
@@ -23,8 +27,46 @@ const MainPage = () => {
     const [sortAlpha, setSortAlpha] = useState(null);
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     const [groupToDelete, setGroupToDelete] = useState(null);
+    const currentUserEmail = getUserEmail();
+    
+    
+    const leaveGroup = async (groupId) => {
+        if (currentUserEmail) {
+            try {
+            // Get the current group details
+            const groupResponse = await axios.get(`http://localhost:8001/api/studygroup/${groupId}`);
+            let groupMembers = groupResponse.data.members;
 
+            // Remove the currentUserEmail from the groupMembers
+            groupMembers = groupMembers.filter(email => email !== currentUserEmail);
+
+            // Now, send the updated array back to the server to update the group
+            const updateResponse = await axios.post(`http://localhost:8001/api/studygroup/${groupId}`, { members: groupMembers });
+
+            // If the update is successful, update the local state to reflect this
+            if (updateResponse.status === 200) {
+                setStudyGroups(prevGroups => prevGroups.map(group => {
+                if (group._id === groupId) {
+                    // This is the group that was just updated, update its members
+                    return {...group, members: groupMembers};
+                }
+                return group; // For all other groups, return them as they were
+                }));
+            }
+            } catch (error) {
+            console.error('Error leaving study group:', error);
+            // Handle the error
+            }
+        } else {
+            console.error('No email found for user');
+            // Handle the case when email is not available
+        }
+    };
     const navigate = useNavigate();
+
+    const handleIconClick = (groupId) => {
+        navigate(`/chat-room/${groupId}`);
+    };
 
     const handleSearchChange = (e) => {
         const value = e.target.value;
@@ -40,55 +82,44 @@ const MainPage = () => {
         setGroupToDelete(null);
     };
 
+    const joinGroup = async (groupId) => {
+        const userEmail = getUserEmail();
+        if (userEmail) {
+            try {
+            // Get the current group details
+            const groupResponse = await axios.get(`http://localhost:8001/api/studygroup/${groupId}`);
+            let groupMembers = groupResponse.data.members;
 
+            // Check if the userEmail is already in groupMembers to avoid duplicates
+            if (!groupMembers.includes(userEmail)) {
+                groupMembers.push(userEmail); // Add the userEmail to the array
 
+                // Now, send the updated array back to the server to update the group
+                const updateResponse = await axios.post(`http://localhost:8001/api/studygroup/${groupId}`, { members: groupMembers });
 
-
-
-
-const joinGroup = async (groupId) => {
-  const userEmail = getUserEmail();
-
-  if (userEmail) {
-    try {
-      // Get the current group details
-      const groupResponse = await axios.get(`http://localhost:8001/api/studygroup/${groupId}`);
-      let groupMembers = groupResponse.data.members;
-
-      // Check if the userEmail is already in groupMembers to avoid duplicates
-      if (!groupMembers.includes(userEmail)) {
-        groupMembers.push(userEmail); // Add the userEmail to the array
-
-        // Now, send the updated array back to the server to update the group
-        const updateResponse = await axios.post(`http://localhost:8001/api/studygroup/${groupId}`, { members: groupMembers });
-
-        // If the update is successful, update the local state to reflect this
-        if (updateResponse.status === 200) {
-          setStudyGroups(prevGroups => prevGroups.map(group => {
-            if (group._id === groupId) {
-              // This is the group that was just joined, update its members
-              return {...group, members: groupMembers};
+                // If the update is successful, update the local state to reflect this
+                if (updateResponse.status === 200) {
+                setStudyGroups(prevGroups => prevGroups.map(group => {
+                    if (group._id === groupId) {
+                    // This is the group that was just joined, update its members
+                    return {...group, members: groupMembers};
+                    }
+                    return group; // For all other groups, return them as they were
+                }));
+                }
+            } else {
+                // User is already in the group, handle this case appropriately
+                console.log('User is already a member of the group.');
             }
-            return group; // For all other groups, return them as they were
-          }));
+            } catch (error) {
+            console.error('Error joining study group:', error);
+            // Handle the error
+            }
+        } else {
+            console.error('No email found for user');
+            // Handle the case when email is not available
         }
-      } else {
-        // User is already in the group, handle this case appropriately
-        console.log('User is already a member of the group.');
-      }
-    } catch (error) {
-      console.error('Error joining study group:', error);
-      // Handle the error
-    }
-  } else {
-    console.error('No email found for user');
-    // Handle the case when email is not available
-  }
-};
-
-
-
-
+    };
 
     const filteredGroups = studyGroups.slice().sort((a, b) => {
             if (sortAlpha === true)
@@ -150,8 +181,6 @@ const joinGroup = async (groupId) => {
             .put(`http://localhost:8001/api/studygroup/${id}`, groupDetails)
             .then((response) => {
                 console.log('Group updated successfully:', response.data);
-                
-           
 
                 // If the response has an error field (group wasn't found), handle it:
 
@@ -213,6 +242,7 @@ const joinGroup = async (groupId) => {
 
     return (
         <>
+        <div className="body-background">
             <div>
                 <h1 style={{ textAlign: 'center', fontSize: '30pxscript' }}>
                     StudySync
@@ -259,9 +289,17 @@ const joinGroup = async (groupId) => {
                 {filteredGroups.map((group) => (
                     <Card key={group._id} style={{ marginBottom: '15px' }}>
                         <CardContent>
-                            <Typography variant="h5" component="div">
-                                {group.groupName}
-                            </Typography>
+                        <div id="inline">
+                            <div className="one">
+                                <Typography variant="h5" component="div">
+                                    {group.groupName}
+                                </Typography>
+                            </div>
+                            {group.members.includes(currentUserEmail) && (
+                    <div className="two" onClick={() => handleIconClick(group._id)}>
+                        <FontAwesomeIcon icon={faMessage} />
+                    </div>)}
+                        </div>
                             <Typography>
                                 Study Topic: {group.studyTopics.join(', ')}
                             </Typography>
@@ -275,22 +313,37 @@ const joinGroup = async (groupId) => {
                                 {new Date(group.endTime).toLocaleTimeString()}
                             </Typography>
                             <br></br>
-                            <Button type="submit" fullWidth onClick={() => joinGroup(group._id)}>
-  Join Group
-</Button>
+                            {group.members[0] === currentUserEmail ? null : 
+                                group.members.includes(currentUserEmail) ?  (
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    onClick={() => leaveGroup(group._id)}
+                                    >
+                                    Leave Group
+                                </Button>
+                            ) : (
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    onClick={() => joinGroup(group._id)}>
+                                    Join Group
+                                </Button>
+                            )}
+                            {group.members[0] === currentUserEmail && (
+                <>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        onClick={() => handleDeleteConfirmation(group._id)}>
+                        Delete Group
+                    </Button>
 
-                            <Button
-                                type="submit"
-                                fullWidth
-                                onClick={() =>
-                                    handleDeleteConfirmation(group._id)
-                                }>
-                                Delete Group
-                            </Button>
-
-                            <Button fullWidth onClick={() => handleEdit(group)}>
-                                Edit Group Details
-                            </Button>
+                    <Button fullWidth onClick={() => handleEdit(group)}>
+                        Edit Group Details
+                    </Button>
+                </>
+            )}
                             <Dialog
                                 open={open}
                                 onClose={handleClose}
@@ -402,6 +455,7 @@ const joinGroup = async (groupId) => {
                         </CardContent>
                     </Card>
                 ))}
+            </div>
             </div>
         </>
     );

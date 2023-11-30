@@ -11,6 +11,8 @@ import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
+import mongoose from 'mongoose'; // Import Mongoose
+import ChatMessage from '/Users/murtazahassan/Desktop/StudySync/backend/models/chatModel.js'
 
 // Setup for __dirname in ES6 module environment
 const __filename = fileURLToPath(import.meta.url);
@@ -31,35 +33,58 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../frontend/build')));
 }
 
-// HTTP Server
+// Create HTTP server
 const httpServer = createServer(app);
 
 // Socket.io setup
-const io = new SocketIOServer(httpServer, {
-  cors: {
-    origin: '*', // Be sure to set the correct origin in production
-    methods: ['GET', 'POST'],
-  }
-});
+const io = new SocketIOServer(httpServer);
 
-// WebSocket event listeners
+// Define the Chat model using Mongoose (adjust the schema as needed)
+
+
 io.on('connection', (socket) => {
-  console.log(`User connected: ${socket.id}`);
+    console.log('New user connected');
 
-  socket.on('joinGroup', (groupId) => {
-    socket.join(groupId);
-    console.log(`User ${socket.id} joined group ${groupId}`);
-  });
+    // Handle receiving a new message
+    socket.on('newMessage', async (data) => {
+        try {
+            // Create a new message in the database
+            const newMessage = await ChatMessage.create({
+                message: data.message,
+                user: data.userId,  // Assuming you send userId with the message
+                studyGroup: data.studyGroupId // Assuming you send studyGroupId with the message
+            });
 
-  socket.on('disconnect', () => {
-    console.log(`User disconnected: ${socket.id}`);
-  });
+            // Emit the new message to all clients
+            io.emit('message', newMessage);
+        } catch (err) {
+            console.log(err);
+            // Handle errors, maybe send a message back to the user
+        }
+    });
+
+    // Optionally, you could add logic to fetch historical messages when a user joins
+    socket.on('joinStudyGroup', async (studyGroupId) => {
+        try {
+            // Fetch last N messages for the study group
+            const messages = await ChatMessage.find({ studyGroup: studyGroupId })
+                .limit(50) // You can change the limit as needed
+                .sort({ createdAt: -1 }); // Sorting by most recent
+
+            // Emit the messages to the user
+            socket.emit('previousMessages', messages);
+        } catch (err) {
+            console.log(err);
+            // Handle errors
+        }
+    });
+
+    // Handling user disconnection
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+        // You can add more logic here if needed
+    });
 });
-
-// Function to notify group about schedule changes
-export const notifyGroupScheduleChange = (groupId, schedule) => {
-  io.to(groupId).emit('scheduleChange', schedule);
-};
 
 // Routes
 app.get('/', (req, res) => {
@@ -73,7 +98,6 @@ app.use('/api/studygroup', studyGroupRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-// Start the server with the HTTP server instance
+// Start the server
 const PORT = process.env.PORT || 8001;
-httpServer.listen(PORT, () => console.log(`Server is listening on PORT ${PORT}`));
-
+app.listen(PORT, () => console.log(`Server is listening on PORT ${PORT}`));

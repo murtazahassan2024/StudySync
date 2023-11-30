@@ -22,7 +22,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/create-study-group" element={<CreateStudyGroup />} />
-        <Route path="/chat-room" element={<ChatRoom />} />
+        <Route path="/chat-room/:groupId" element={<ChatRoom />} />
       </Routes>
     </AuthProvider>
     </BrowserRouter>

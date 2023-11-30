@@ -11,12 +11,6 @@ import {
 } from '../controllers/studyGroupController.js';
 
 
-
-
-
-
-
-
 const studyGroupRoutes = express.Router();
 
 // API Endpoints for Study Groups

@@ -2,9 +2,6 @@ import asyncHandler from 'express-async-handler';
 import StudyGroup from '../models/studyGroupModel.js';
 import sendEmail from '../emailService.js';
 
-
-
-
 // Create a new study group
 const createStudyGroup = asyncHandler(async (req, res) => {
     const { groupName, location, startTime, endTime, members, studyTopics } =
@@ -62,8 +59,6 @@ const updateStudyGroup = asyncHandler(async (req, res) => {
         studyGroup.endTime = endTime;
         studyGroup.members = members;
         studyGroup.studyTopics = studyTopics;
-      
-         console.log("hi")
 
         const updatedGroup = await studyGroup.save();
 
