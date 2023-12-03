@@ -86,9 +86,6 @@ const ChatRoom = () => {
       // Emit the message
       socket.emit("newMessage", messageData);
 
-      // Add message to local state for immediate UI update
-      setMessages((prevMessages) => [...prevMessages, messageData]);
-
       // Clear the input field
       setNewMessage("");
     }
