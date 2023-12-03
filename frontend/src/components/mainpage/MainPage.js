@@ -17,6 +17,7 @@ import { getUserEmail } from '/Users/murtazahassan/Desktop/StudySync/frontend/sr
 import {exportMembers} from '/Users/murtazahassan/Desktop/StudySync/frontend/src/components/studygroupformation/CreateStudyGroup.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMessage } from '@fortawesome/free-regular-svg-icons';
+import { useSocket } from '/Users/murtazahassan/Desktop/StudySync/frontend/src/SocketContext.js';
 
 
 
@@ -28,6 +29,8 @@ const MainPage = () => {
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     const [groupToDelete, setGroupToDelete] = useState(null);
     const currentUserEmail = getUserEmail();
+    const [currentEditingGroupId, setCurrentEditingGroupId] = useState(null);
+    const socket = useSocket();
     
     
     const leaveGroup = async (groupId) => {
@@ -66,6 +69,9 @@ const MainPage = () => {
 
     const handleIconClick = (groupId) => {
         navigate(`/chat-room/${groupId}`);
+        if (socket) {
+            socket.emit('joinStudyGroup', groupId);
+        }
     };
 
     const handleSearchChange = (e) => {
@@ -149,8 +155,6 @@ const MainPage = () => {
     const handleClose = () => {
         setOpen(false);
     };
-
-    const [currentEditingGroupId, setCurrentEditingGroupId] = useState(null);
 
     const handleEdit = (group) => {
         setGroupDetails({

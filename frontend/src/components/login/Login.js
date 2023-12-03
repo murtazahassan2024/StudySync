@@ -11,8 +11,15 @@ import { useAuth } from '/Users/murtazahassan/Desktop/StudySync/frontend/src/con
 
 export const getUserEmail = () => {
     return localStorage.getItem('userEmail');
-
 };
+
+export const getUserId = () => {
+    return localStorage.getItem('userId');
+};
+
+export const getUserName = () => {
+    return localStorage.getItem('userName');
+}
 
 const Login = () => {
     const navigate = useNavigate();
@@ -20,7 +27,6 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
-    const [userId, setUserId] = useState(null);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -30,9 +36,10 @@ const Login = () => {
                 { email, password },
             );
 
-            console.log('User details:', response.data);
             localStorage.setItem('userEmail', response.data.email);
-            console.log('Email from storage:', getUserEmail());
+            localStorage.setItem('userId', response.data._id);
+            localStorage.setItem('userName', response.data.name);
+            
 
             // Assuming 'login' function is from AuthContext and it's set up to handle the response
             login(response.data); // This function will set the user and email in the context
