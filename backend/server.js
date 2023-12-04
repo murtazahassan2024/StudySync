@@ -11,8 +11,8 @@ import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
-import mongoose from 'mongoose'; // Import Mongoose
 import ChatMessage from '/Users/murtazahassan/Desktop/StudySync/backend/models/chatModel.js'
+
 
 // Setup for __dirname in ES6 module environment
 const __filename = fileURLToPath(import.meta.url);
@@ -51,8 +51,7 @@ io.on('connection', (socket) => {
     console.log('New user connected');
 
     socket.on('joinStudyGroup', async (studyGroupId) => {
-        socket.join(studyGroupId); // Join the socket to a room named after the studyGroup ID
-        // Fetch and emit previous messages...
+        socket.join(studyGroupId); 
     });
 
     // Add the leaveStudyGroup event
@@ -63,8 +62,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('joinStudyGroup', async (studyGroupId) => {
-        socket.join(studyGroupId); // Join the socket to a room named after the studyGroup ID
-        // Fetch and emit previous messages as before...
+        socket.join(studyGroupId); 
     });
 
     // Handle receiving a new message

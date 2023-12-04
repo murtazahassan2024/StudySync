@@ -7,6 +7,7 @@ import {
     deleteStudyGroup,
     getStudyGroup,
     updateStudyGroupMembers,
+    getStudyGroupName
 
 } from '../controllers/studyGroupController.js';
 
@@ -20,10 +21,6 @@ studyGroupRoutes.put('/:id', updateStudyGroup);
 studyGroupRoutes.delete('/:id', deleteStudyGroup);
 studyGroupRoutes.get('/:id', getStudyGroup);
 studyGroupRoutes.post('/:id', updateStudyGroupMembers);
-
-
-
-
-
+studyGroupRoutes.get('/studyGroupName/:id', getStudyGroupName);
 
 export default studyGroupRoutes;

@@ -36,12 +36,22 @@ const getStudyGroups = asyncHandler(async (req, res) => {
 
 
 const getStudyGroup = asyncHandler(async (req, res) => {
-  const { id } = req.params; // Extract the ID from the request parameters
+    const { id } = req.params; // Extract the ID from the request parameters
 
   // Use the ID to find a single study group
-  const studyGroup = await StudyGroup.findById(id);
-  res.json(studyGroup);
+    const studyGroup = await StudyGroup.findById(id);
+    res.json(studyGroup);
 });
+
+
+const getUserById = asyncHandler(async (req, res) => {
+  const { id } = req.params; // Extract the ID from the request parameters
+
+    // Use the ID to find a single user
+    const user = await USER.findById(id);
+    res.json({ name: user.name });
+    });
+
 
 
 // Update a study group
@@ -111,35 +121,45 @@ const deleteStudyGroup = asyncHandler(async (req, res) => {
 });
 
 const updateStudyGroupMembers = async (req, res) => {
-  // Destructure the `id` from `req.params` or `req.body` as required.
-  const { id } = req.params; // or `const { id } = req.body;` if the ID is sent in the body.
-  const { members } = req.body;
+    // Destructure the `id` from `req.params` or `req.body` as required.
+    const { id } = req.params; // or `const { id } = req.body;` if the ID is sent in the body.
+    const { members } = req.body;
 
-  try {
-    // You need to pass the `id` you just destructured to `findByIdAndUpdate`.
-    const updatedGroup = await StudyGroup.findByIdAndUpdate(
-      id,
-      { $set: { members: members } },
-      { new: true }
-    );
- 
+    try {
+        // You need to pass the `id` you just destructured to `findByIdAndUpdate`.
+        const updatedGroup = await StudyGroup.findByIdAndUpdate(
+        id,
+        { $set: { members: members } },
+        { new: true }
+        );
+    
 
-    if (!updatedGroup) {
-      return res.status(404).json({ message: 'Study group not found.' });
+        if (!updatedGroup) {
+        return res.status(404).json({ message: 'Study group not found.' });
+        }
+
+        res.status(200).json({
+        message: 'Study group updated successfully.',
+        studyGroup: updatedGroup
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating study group.', error: error.message });
     }
+    };
 
-    res.status(200).json({
-      message: 'Study group updated successfully.',
-      studyGroup: updatedGroup
-    });
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating study group.', error: error.message });
-  }
-};
+const getStudyGroupName = asyncHandler(async (req, res) => {
+    const { id } = req.params; // Extract the ID from the request parameters
 
-
-
+    // Use the ID to find a single study group
+    const studyGroup = await StudyGroup.findById(id);
+    res.json( studyGroup.groupName ); // Return only the group name
+    }
+);
 
 
 
-export { createStudyGroup, getStudyGroups, updateStudyGroup, deleteStudyGroup, getStudyGroup,updateStudyGroupMembers};
+
+
+
+
+export { createStudyGroup, getStudyGroups, updateStudyGroup, deleteStudyGroup, getStudyGroup,updateStudyGroupMembers, getUserById, getStudyGroupName};

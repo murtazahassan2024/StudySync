@@ -15,8 +15,6 @@ import { useNavigate } from 'react-router-dom';
 import { TextField } from '@mui/material';
 import { getUserEmail } from '/Users/murtazahassan/Desktop/StudySync/frontend/src/components/login/Login.js'; 
 import {exportMembers} from '/Users/murtazahassan/Desktop/StudySync/frontend/src/components/studygroupformation/CreateStudyGroup.js';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMessage } from '@fortawesome/free-regular-svg-icons';
 import { useSocket } from '/Users/murtazahassan/Desktop/StudySync/frontend/src/SocketContext.js';
 
 
@@ -248,7 +246,7 @@ const MainPage = () => {
         <>
         <div className="body-background">
             <div>
-                <h1 style={{ textAlign: 'center', fontSize: '30pxscript' }}>
+                <h1 style={{ textAlign: 'center', fontSize: '50px', fontFamily:'Brush Script MT' }}>
                     StudySync
                 </h1>
             </div>
@@ -258,7 +256,7 @@ const MainPage = () => {
                     value={searchTerm}
                     onChange={handleSearchChange}
                     placeholder="Search by group name or study topic..."
-                    style={{ margin: '20px 20px 20px 20px' }}
+                    style={{ backgroundColor: 'white' ,margin: '20px 20px 20px 20px' }}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -280,7 +278,7 @@ const MainPage = () => {
                     onClick={() => navigate('/create-study-group')}
                     variant="contained"
                     color="primary"
-                    style={{ margin: '25px 0' }}>
+                    style={{ margin: '25px 0', height: '50px' }}>
                     Create Study Group
                 </Button>
             </div>
@@ -291,7 +289,7 @@ const MainPage = () => {
                     flexWrap: 'wrap',
                 }}>
                 {filteredGroups.map((group) => (
-                    <Card key={group._id} style={{ marginBottom: '15px' }}>
+                    <Card key={group._id} style={{ marginBottom: '15px', width:'350px' }}>
                         <CardContent>
                         <div id="inline">
                             <div className="one">
@@ -301,7 +299,9 @@ const MainPage = () => {
                             </div>
                             {group.members.includes(currentUserEmail) && (
                     <div className="two" onClick={() => handleIconClick(group._id)}>
-                        <FontAwesomeIcon icon={faMessage} />
+                        <Button fullWidth>
+                            Chat App
+                        </Button>
                     </div>)}
                         </div>
                             <Typography>

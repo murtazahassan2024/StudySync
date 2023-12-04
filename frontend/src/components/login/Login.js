@@ -17,17 +17,13 @@ export const getUserId = () => {
     return localStorage.getItem('userId');
 };
 
-export const getUserName = () => {
-    return localStorage.getItem('userName');
-}
-
 const Login = () => {
     const navigate = useNavigate();
     const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
-
+    
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -38,8 +34,6 @@ const Login = () => {
 
             localStorage.setItem('userEmail', response.data.email);
             localStorage.setItem('userId', response.data._id);
-            localStorage.setItem('userName', response.data.name);
-            
 
             // Assuming 'login' function is from AuthContext and it's set up to handle the response
             login(response.data); // This function will set the user and email in the context

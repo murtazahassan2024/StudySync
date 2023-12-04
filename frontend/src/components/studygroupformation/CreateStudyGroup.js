@@ -9,22 +9,8 @@ import { useAuth } from '/Users/murtazahassan/Desktop/StudySync/frontend/src/con
 import { getUserEmail } from '/Users/murtazahassan/Desktop/StudySync/frontend/src/components/login/Login.js'; 
 
 export const exportMembers = (updatedMembers) => {
-  // This function will handle the exporting of members
-  // For example, logging to the console:
-    console.log(updatedMembers)
     return updatedMembers
-
-  // Or send this data to a server or write to a file as needed
-  // axios.post('/api/export/members', { members: updatedMembers });
 };
-
-
-
-// ... Inside your component ...
-
-// Update the exportMembers function to be called every time the members are updated.
-
-
 
 
 const CreateStudyGroupForm = () => {
@@ -45,22 +31,12 @@ const CreateStudyGroupForm = () => {
         exportMembers(updatedMembers); // Call exportMembers with the updated members list
 };
 
-    
-
-
-
-
 const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Retrieve the email from local storage
-    console.log(getUserEmail())
-    console.log(getUserEmail())
- 
+
     const userEmail = getUserEmail();
     let updatedMembers = members;
     if (userEmail) {
-        // Add the email from getUserEmail to the list if it's not already there
         updatedMembers =userEmail
     }
     
@@ -68,9 +44,6 @@ const handleSubmit = async (e) => {
     const studyTopicsArray = studyTopics
         .split(',')
         .map((topic) => topic.trim());
-    
-   
-    
 
     try {
         const response = await axios.post(
@@ -91,7 +64,7 @@ const handleSubmit = async (e) => {
 
         setMessage('Study group successfully created!');
         setIsError(false);
-        navigate('/chat-room');
+        navigate('/');
         
 
     } catch (error) {
@@ -159,18 +132,15 @@ const handleSubmit = async (e) => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-            <TextField
-                fullWidth
-                label="Members (comma-separated emails)"
-                variant="outlined"
-                value={members} // 'members' should now be a string, not an array
-                onChange={(e) => setMembers(e.target.value)}
-            />
-</Grid>
-
-                {/* For members, you can use a multi-select component */}
-                {/* For study topics, you can use a text input or select component */}
-                {/* Remember to update the state and API request accordingly */}
+                    <TextField
+                        fullWidth
+                        label="Members (comma-separated emails)"
+                        variant="outlined"
+                        value={members} // 'members' should now be a string, not an array
+                        onChange={(e) => setMembers(e.target.value)}
+                        style={{ display: 'none' }}
+                    />
+                </Grid>
                 <Grid item xs={12}>
                     <Button
                 type="submit"

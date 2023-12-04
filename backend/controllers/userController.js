@@ -1,7 +1,8 @@
 import asyncHAndler from 'express-async-handler';
 import USER from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
-import { escapeRegex } from '../utils/utils.js';
+import asyncHandler from 'express-async-handler';
+
 
 const registerUser = asyncHAndler(async (req, res) => {
     const { name, email, password, isAdmin, securityQuestion, securityAnswer } = req.body;
@@ -77,5 +78,12 @@ const forgotPass = async (req, res) => {
 };
 
 
+const getUserNameById = asyncHandler(async (req, res) => {
+    const {id} = req.params; // Retrieve the userId from the route parameter
 
-export { registerUser, login, forgotPass };
+    const user = await USER.findById(id);
+    res.send(user.name);
+});
+
+
+export { registerUser, login, forgotPass, getUserNameById };

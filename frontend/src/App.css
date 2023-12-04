@@ -135,3 +135,86 @@ label {
   height: 100vh; /* Make sure it covers the whole page vertically */
   width: 100%; /* Cover whole width */
 }
+
+.blueButton {
+  background-color: #5850c0;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+}
+
+.redButton {
+  background-color: red;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.fixed-header {
+  position: fixed;
+  top: -20px; /* Extend 20px above the top */
+  left: 60%;
+  transform: translateX(-50%);
+  background-color: white;
+  z-index: 1000;
+  width: 90%;
+  margin-left: 250px;
+}
+
+
+.main-content {
+  padding-top: 60px; /* Same as the header height */
+  padding-bottom: 100px;
+  height: 500px; /* Adjust this value based on your layout needs */
+  width: 400px;
+  overflow-y: auto;
+}
+
+.fixed-container {
+  position: fixed;
+  bottom: 75px; /* this thing */
+  left: 0;
+  width: 100%;
+  background-color: white; 
+  z-index: 1000;
+  padding: 10px 0; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px solid #5850c0;
+}
+
+
+.fixed-leave-button {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.messageSquircle {
+  border-radius: 20px;
+  border: 2px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  display: inline-block; /* Makes the element fit its content */
+  max-width: 80%; /* Optional, adjust as needed */
+  color: white;
+}
+
+.messageSquircle.left {
+  background-color: white; /* Light pink for left-aligned messages */
+  color: #5850c0 !important;
+}
+
+/* Background color for messages on the right */
+.messageSquircle.right {
+  background-color: #5850c0; /* Light blue for right-aligned messages */
+}
+
+
+
